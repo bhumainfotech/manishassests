@@ -66,4 +66,5 @@ export enum PermissionEntity {
   userData = "user-data", // This is for the user to load their own data.
   update = "update",
   commandPaletteSearch = "command-palette-search",
+  jurisdiction = "jurisdiction",
 }

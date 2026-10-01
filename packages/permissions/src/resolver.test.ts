@@ -81,6 +81,30 @@ describe("roleHasPermission — ADMIN/OWNER short-circuit", () => {
 });
 
 describe("roleHasPermission — matrix lookup", () => {
+  test("reserves jurisdiction administration for privileged roles", () => {
+    for (const role of ["BASE", "SELF_SERVICE"]) {
+      assert.equal(
+        roleHasPermission({
+          roles: [role],
+          entity: PermissionEntity.jurisdiction,
+          action: PermissionAction.read,
+        }),
+        false
+      );
+    }
+
+    for (const role of ["ADMIN", "OWNER"]) {
+      assert.equal(
+        roleHasPermission({
+          roles: [role],
+          entity: PermissionEntity.jurisdiction,
+          action: PermissionAction.import,
+        }),
+        true
+      );
+    }
+  });
+
   test("denies BASE an asset create and grants an asset read", () => {
     assert.equal(
       roleHasPermission({

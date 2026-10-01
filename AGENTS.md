@@ -196,6 +196,13 @@ When implementing bulk operations that work across multiple pages of filtered da
   Shelf.nu.
 - Cross-reference any relevant doc-specific checklists or conventions and incorporate them into your implementation plan and
   PR notes.
+- For every IPAMS change, read and follow
+  [`apps/docs/ipams-agentic-vibe-coding.md`](./apps/docs/ipams-agentic-vibe-coding.md).
+  Update its implementation ledger, requirement traceability, milestone status,
+  and next-slice notes in the same change. An IPAMS feature is not complete
+  when only its UI, service, or database portion exists; deliver the approved
+  vertical slice across persistence, authorization, server behavior, UI,
+  auditability, tests, migration/rollout, and documentation.
 
 ## Git Practices
 

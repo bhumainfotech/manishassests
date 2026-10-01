@@ -1019,6 +1019,8 @@ model Organization {
   roleChangeLogs  RoleChangeLog[]
   teamMemberNotes     TeamMemberNote[]
   activityEvents      ActivityEvent[]
+  jurisdictionUnits   JurisdictionUnit[]
+  jurisdictionImports JurisdictionImportBatch[]
 
 
   // Migration flag to track if sequential IDs have been generated for this organization's existing assets
@@ -2590,11 +2592,17 @@ enum ActivityEntity {
   CUSTODY
   USER
   ORGANIZATION
+  JURISDICTION
 }
 
 // Additive-only. Never rename or remove values — query compatibility depends
 // on historical events keeping their original action name.
 enum ActivityAction {
+  // Jurisdiction master
+  JURISDICTION_CREATED
+  JURISDICTION_FIELD_CHANGED
+  JURISDICTION_STATUS_CHANGED
+
   // Asset
   ASSET_CREATED
   ASSET_NAME_CHANGED
@@ -2665,4 +2673,85 @@ enum ActivityAction {
 
   // Organization (workspace-level configuration changes)
   ORGANIZATION_QR_ID_DISPLAY_PREFERENCE_CHANGED
+}
+
+enum JurisdictionUnitType {
+  COUNTRY
+  STATE
+  DISTRICT
+  ZILLA_PARISHAD
+  SUBDISTRICT
+  BLOCK
+  PANCHAYAT_SAMITI
+  GRAM_PANCHAYAT
+  VILLAGE
+  WARD
+  HABITATION
+}
+
+enum JurisdictionRecordStatus {
+  DRAFT
+  IN_REVIEW
+  ACTIVE
+  RETIRED
+}
+
+enum JurisdictionImportStatus {
+  UPLOADED
+  VALIDATING
+  VALIDATED
+  REJECTED
+  APPROVED
+  ACTIVATED
+  FAILED
+}
+
+model JurisdictionUnit {
+  id             String                   @id @default(cuid())
+  organization   Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  organizationId String
+  source         String
+  sourceCode     String
+  type           JurisdictionUnitType
+  name           String
+  nameHi         String?
+  status         JurisdictionRecordStatus @default(DRAFT)
+  validFrom      DateTime?
+  validTo        DateTime?
+  version        Int                      @default(1)
+  metadata       Json?
+  parent         JurisdictionUnit?        @relation("JurisdictionHierarchy", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  parentId       String?
+  children       JurisdictionUnit[]       @relation("JurisdictionHierarchy")
+  submittedById  String?
+  submittedAt    DateTime?
+  reviewedById   String?
+  reviewedAt     DateTime?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  @@unique([organizationId, source, type, sourceCode], name: "jurisdiction_source_code_unique")
+  @@index([organizationId, parentId, status], name: "jurisdiction_parent_status_idx")
+  @@index([organizationId, type, name], name: "jurisdiction_type_name_idx")
+  @@index([organizationId, status, submittedAt], name: "jurisdiction_review_queue_idx")
+}
+
+model JurisdictionImportBatch {
+  id             String                   @id @default(cuid())
+  organization   Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  organizationId String
+  source         String
+  sourceVersion  String?
+  checksum       String
+  fileName       String
+  status         JurisdictionImportStatus @default(UPLOADED)
+  totalRows      Int                      @default(0)
+  validRows      Int                      @default(0)
+  invalidRows    Int                      @default(0)
+  summary        Json?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  @@unique([organizationId, source, checksum], name: "jurisdiction_import_checksum_unique")
+  @@index([organizationId, createdAt(sort: Desc)], name: "jurisdiction_import_created_idx")
 }

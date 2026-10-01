@@ -63,6 +63,7 @@ export type FailureReason = {
     | "Healthcheck"
     | "Image"
     | "Invite"
+    | "Jurisdiction"
     | "User onboarding"
     | "Location"
     | "Notification"

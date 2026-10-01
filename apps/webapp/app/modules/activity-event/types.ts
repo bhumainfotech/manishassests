@@ -49,7 +49,9 @@ export type FieldChangeAction =
   // updated somehow" event that `record-event-payload-shapes` forbids —
   // `count(action, field)` has to stay answerable without parsing JSON.
   | "AUDIT_UPDATED"
-  | "ORGANIZATION_QR_ID_DISPLAY_PREFERENCE_CHANGED";
+  | "ORGANIZATION_QR_ID_DISPLAY_PREFERENCE_CHANGED"
+  | "JURISDICTION_FIELD_CHANGED"
+  | "JURISDICTION_STATUS_CHANGED";
 
 /** Fields shared by every event input. */
 type BaseEventInput = {

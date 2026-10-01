@@ -21,6 +21,7 @@ export const Role2PermissionMap: {
   [K in OrganizationRole]?: Record<PermissionEntity, PermissionAction[]>;
 } = {
   BASE: {
+    [PermissionEntity.jurisdiction]: [],
     [PermissionEntity.asset]: [PermissionAction.read],
     // Reports aggregate org-wide custody, booking and value data; the
     // sidebar offers them to admins and owners only, and the server gate
@@ -74,6 +75,7 @@ export const Role2PermissionMap: {
     [PermissionEntity.commandPaletteSearch]: [PermissionAction.read],
   },
   SELF_SERVICE: {
+    [PermissionEntity.jurisdiction]: [],
     [PermissionEntity.asset]: [PermissionAction.read, PermissionAction.custody],
     [PermissionEntity.reports]: [],
     [PermissionEntity.assetIndexSettings]: [PermissionAction.read],
@@ -129,6 +131,12 @@ export const Role2PermissionMap: {
     [PermissionEntity.commandPaletteSearch]: [PermissionAction.read],
   },
   ADMIN: {
+    [PermissionEntity.jurisdiction]: [
+      PermissionAction.create,
+      PermissionAction.read,
+      PermissionAction.update,
+      PermissionAction.import,
+    ],
     [PermissionEntity.reports]: [
       PermissionAction.read,
       PermissionAction.export,
@@ -278,6 +286,12 @@ export const Role2PermissionMap: {
     [PermissionEntity.commandPaletteSearch]: [PermissionAction.read],
   },
   OWNER: {
+    [PermissionEntity.jurisdiction]: [
+      PermissionAction.create,
+      PermissionAction.read,
+      PermissionAction.update,
+      PermissionAction.import,
+    ],
     [PermissionEntity.reports]: [
       PermissionAction.read,
       PermissionAction.export,
