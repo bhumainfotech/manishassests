@@ -246,6 +246,14 @@ export function useSidebarNavItems() {
           title: "Asset models",
           to: "/settings/asset-models",
         },
+        {
+          title: "IPAMS masters",
+          to: "/ipams/masters",
+        },
+        {
+          title: "Jurisdictions",
+          to: "/ipams/jurisdictions",
+        },
       ],
     },
   ];
